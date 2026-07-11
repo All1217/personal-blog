@@ -40,10 +40,10 @@ const galleryItems = [
 }
 
 .gallery-card {
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: white;
-  box-shadow: var(--shadow);
+  background: var(--bg);
+  box-shadow: var(--shadow-md);
   transition: transform var(--transition);
   cursor: default;
 }
@@ -58,12 +58,12 @@ const galleryItems = [
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+  background: var(--accent-gradient);
 }
 
 .gallery-emoji {
   font-size: 4rem;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .gallery-info {
@@ -74,10 +74,11 @@ const galleryItems = [
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 6px;
+  color: var(--text-heading);
 }
 
 .gallery-info p {
-  color: var(--gray-dark);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 </style>

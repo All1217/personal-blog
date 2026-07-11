@@ -31,7 +31,7 @@ const stats = [
 
 <style scoped>
 #about {
-  background: var(--gray);
+  background: var(--bg-alt);
 }
 
 .about-content {
@@ -48,7 +48,7 @@ const stats = [
 
 .about-text p {
   font-size: 1.05rem;
-  color: #444;
+  color: var(--text);
   margin-bottom: 16px;
 }
 
@@ -60,11 +60,11 @@ const stats = [
 }
 
 .stat-item {
-  background: white;
-  border-radius: var(--radius);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
   padding: 24px 20px;
   text-align: center;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-number {
@@ -77,7 +77,7 @@ const stats = [
 .stat-label {
   display: block;
   font-size: 0.9rem;
-  color: var(--gray-dark);
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 </style>

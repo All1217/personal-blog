@@ -57,7 +57,7 @@ const handleSubmit = () => {
 
 <style scoped>
 #contact {
-  background: var(--gray);
+  background: var(--bg-alt);
 }
 
 .contact-content {
@@ -77,10 +77,10 @@ const handleSubmit = () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  background: white;
+  background: var(--bg);
   padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .contact-icon {
@@ -90,26 +90,27 @@ const handleSubmit = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gray);
-  border-radius: 12px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
 }
 
 .contact-item h4 {
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 2px;
+  color: var(--text-heading);
 }
 
 .contact-item p {
   font-size: 0.88rem;
-  color: var(--gray-dark);
+  color: var(--text-secondary);
 }
 
 .contact-form {
-  background: white;
+  background: var(--bg);
   padding: 32px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .form-row {
@@ -125,13 +126,19 @@ const handleSubmit = () => {
 .form-input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #eee;
-  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-sm);
   font-size: 0.95rem;
   margin-bottom: 16px;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), background var(--transition);
   font-family: inherit;
   outline: none;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
 }
 
 .form-input:focus {

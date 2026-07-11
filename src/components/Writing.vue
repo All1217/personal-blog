@@ -6,7 +6,7 @@
 
       <div class="card-grid">
         <router-link
-          v-for="post in posts"
+          v-for="post in featuredArticles"
           :key="post.id"
           :to="`/article/${post.id}`"
           class="card post-card"
@@ -25,15 +25,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { articles } from '../data/articles.js'
 
-// 列表页不需要 body 字段，使用解构排除
-const posts = articles.map(({ body, ...rest }) => rest)
+/**
+ * 从文章数据中排除 body 字段（列表页不需要正文内容），
+ * 使用 computed 使得响应式缓存，只在 articles 变化时重新计算
+ */
+const featuredArticles = computed(() =>
+  articles.map(({ body, ...rest }) => rest)
+)
 </script>
 
 <style scoped>
 #writing {
-  background: var(--gray);
+  background: var(--bg-alt);
 }
 
 .post-card {
@@ -42,6 +48,7 @@ const posts = articles.map(({ body, ...rest }) => rest)
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  background: var(--bg);
 }
 
 .post-meta {
@@ -53,14 +60,14 @@ const posts = articles.map(({ body, ...rest }) => rest)
 }
 
 .post-date {
-  color: var(--gray-dark);
+  color: var(--text-secondary);
 }
 
 .post-category {
   display: inline-block;
   padding: 2px 10px;
-  background: var(--accent-light);
-  color: white;
+  background: var(--accent);
+  color: var(--bg);
   border-radius: 12px;
   font-size: 0.78rem;
   font-weight: 600;
@@ -71,10 +78,11 @@ const posts = articles.map(({ body, ...rest }) => rest)
   font-weight: 700;
   margin-bottom: 8px;
   line-height: 1.4;
+  color: var(--text-heading);
 }
 
 .post-excerpt {
-  color: var(--gray-dark);
+  color: var(--text-secondary);
   font-size: 0.92rem;
   line-height: 1.6;
   flex: 1;

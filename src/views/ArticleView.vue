@@ -43,15 +43,15 @@ const article = computed(() => {
 <style scoped>
 .article-page {
   min-height: 100vh;
-  background: var(--bg, #ffffff);
+  background: var(--bg);
 }
 
 .article-header {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--navbar-bg);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--navbar-border);
   z-index: 100;
 }
 
@@ -62,7 +62,7 @@ const article = computed(() => {
 }
 
 .back-link {
-  color: var(--accent, #4FC08D);
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
@@ -87,15 +87,15 @@ const article = computed(() => {
 }
 
 .article-date {
-  color: var(--gray-dark, #666);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .article-category {
   display: inline-block;
   padding: 3px 12px;
-  background: var(--accent-light, #6dd5a0);
-  color: white;
+  background: var(--accent);
+  color: var(--bg);
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -106,19 +106,20 @@ const article = computed(() => {
   font-weight: 800;
   line-height: 1.3;
   margin-bottom: 32px;
-  color: var(--text, #1a1a2e);
+  color: var(--text-heading);
 }
 
 .article-body {
   font-size: 1.05rem;
   line-height: 1.9;
-  color: var(--text, #1a1a2e);
+  color: var(--text);
 }
 
 .article-body h2 {
   font-size: 1.5rem;
   margin: 40px 0 16px;
   font-weight: 700;
+  color: var(--text-heading);
 }
 
 .article-body p {
@@ -126,8 +127,8 @@ const article = computed(() => {
 }
 
 .article-body pre {
-  background: #f5f5f5;
-  border-radius: 12px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
   padding: 20px;
   overflow-x: auto;
   margin: 20px 0;
@@ -143,7 +144,7 @@ const article = computed(() => {
   max-width: 800px;
   margin: 0 auto;
   padding: 40px 24px 80px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--border);
 }
 
 .article-not-found {
@@ -156,20 +157,21 @@ const article = computed(() => {
 .article-not-found h2 {
   font-size: 2rem;
   margin-bottom: 12px;
+  color: var(--text-heading);
 }
 
 .article-not-found p {
-  color: var(--gray-dark, #666);
+  color: var(--text-secondary);
   margin-bottom: 24px;
 }
 
 .back-home {
   display: inline-block;
   padding: 10px 24px;
-  background: var(--accent, #4FC08D);
-  color: white;
+  background: var(--accent);
+  color: var(--bg);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
 }
 

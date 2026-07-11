@@ -95,7 +95,7 @@ const scrollToTop = () => {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--navbar-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
@@ -103,8 +103,8 @@ const scrollToTop = () => {
 }
 
 .navbar.scrolled {
-  border-bottom-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+  border-bottom-color: var(--navbar-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-container {
@@ -131,16 +131,16 @@ const scrollToTop = () => {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text);
+  color: var(--text-secondary);
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 0.95rem;
   transition: var(--transition);
   cursor: pointer;
 }
 
 .nav-link:hover {
-  background: var(--gray);
+  background: var(--bg-alt);
   color: var(--accent);
 }
 
@@ -178,7 +178,7 @@ const scrollToTop = () => {
     top: 64px;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.98);
+    background: var(--navbar-bg);
     backdrop-filter: blur(12px);
     flex-direction: column;
     padding: 16px 24px;
@@ -187,7 +187,7 @@ const scrollToTop = () => {
     opacity: 0;
     pointer-events: none;
     transition: var(--transition);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--navbar-border);
   }
 
   .nav-menu.open {

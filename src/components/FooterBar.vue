@@ -37,8 +37,8 @@ const social = [
 
 <style scoped>
 .footer {
-  background: #1a1a2e;
-  color: #ccc;
+  background: var(--footer-bg);
+  color: var(--footer-text);
   padding: 60px 24px 0;
 }
 
@@ -50,18 +50,18 @@ const social = [
   justify-content: space-between;
   gap: 32px;
   padding-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--footer-divider);
 }
 
 .footer-brand h3 {
-  color: white;
+  color: var(--bg);
   font-size: 1.3rem;
   margin-bottom: 6px;
 }
 
 .footer-brand p {
   font-size: 0.9rem;
-  color: #888;
+  color: var(--footer-muted);
 }
 
 .footer-links {
@@ -71,7 +71,7 @@ const social = [
 }
 
 .footer-link {
-  color: #aaa;
+  color: var(--footer-link);
   text-decoration: none;
   font-size: 0.92rem;
   transition: color var(--transition);
@@ -102,6 +102,6 @@ const social = [
   text-align: center;
   padding: 20px 0;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 </style>

@@ -23,7 +23,7 @@ const scrollToTop = () => {
   width: 48px;
   height: 48px;
   background: var(--accent);
-  color: white;
+  color: var(--bg);
   border: none;
   border-radius: 50%;
   font-size: 1.3rem;
@@ -36,9 +36,17 @@ const scrollToTop = () => {
   justify-content: center;
 }
 
+/* hover 时使用 darker accent，不再硬编码 #3da87e */
 .back-to-top:hover {
-  background: #3da87e;
+  background: var(--accent-dark);
   transform: translateY(-3px);
   box-shadow: 0 6px 24px rgba(79, 192, 141, 0.5);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 28px;
+    right: 20px;
+  }
 }
 </style>
