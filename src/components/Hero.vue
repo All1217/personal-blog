@@ -1,166 +1,128 @@
-<script setup>
-</script>
-
 <template>
-  <section class="hero">
-    <div class="container hero-content">
-      <div class="hero-text">
-        <h1 class="hero-title">你好，我是<span class="highlight">墨羽</span></h1>
-        <p class="hero-subtitle">一名热爱技术与文字的全栈开发者</p>
-        <p class="hero-desc">用代码构建世界，用文字记录思考。</p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">查看项目</a>
-          <a href="#writing" class="btn btn-outline">阅读文章</a>
-        </div>
+  <section class="hero-section" id="hero">
+    <div class="hero-container">
+      <div class="hero-avatar">
+        <span class="avatar-placeholder">👤</span>
       </div>
-      <div class="hero-visual">
-        <div class="avatar-box">
-          <div class="avatar-placeholder">✧</div>
-        </div>
+      <h1 class="hero-title">
+        你好，我是 <span class="highlight">创作者</span>
+      </h1>
+      <p class="hero-desc">
+        前端开发者 · 设计爱好者 · 终身学习者
+      </p>
+      <p class="hero-bio">
+        热衷于用代码和设计创造美好的数字体验，记录成长路上的每一个脚印。
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">查看作品</a>
+        <a href="#contact" class="btn btn-outline">联系我</a>
       </div>
     </div>
-    <div class="scroll-indicator">↓</div>
   </section>
 </template>
 
+<script setup>
+</script>
+
 <style scoped>
-.hero {
+.hero-section {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 0 60px;
-  position: relative;
-  overflow: hidden;
+  text-align: center;
+  padding: 120px 24px 80px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  right: -20%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(108, 92, 231, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
+.hero-container {
+  max-width: 680px;
 }
 
-.hero-content {
-  display: flex;
+.hero-avatar {
+  margin-bottom: 32px;
+}
+
+.avatar-placeholder {
+  display: inline-flex;
   align-items: center;
-  gap: 60px;
-  flex-wrap: wrap;
-}
-
-.hero-text {
-  flex: 1;
-  min-width: 300px;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  font-size: 3rem;
+  box-shadow: var(--shadow);
+  border: 3px solid var(--accent-light);
 }
 
 .hero-title {
-  font-size: 3rem;
+  font-size: 2.8rem;
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 16px;
 }
 
-.hero-title .highlight {
-  background: linear-gradient(135deg, var(--accent), var(--accent-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-subtitle {
-  font-size: 1.2rem;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
+.highlight {
+  color: var(--accent);
 }
 
 .hero-desc {
-  color: var(--text-muted);
+  font-size: 1.2rem;
+  color: var(--gray-dark);
+  margin-bottom: 12px;
+}
+
+.hero-bio {
   font-size: 1rem;
-  margin-bottom: 32px;
+  color: #888;
+  margin-bottom: 36px;
 }
 
 .hero-actions {
   display: flex;
   gap: 16px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
-.hero-visual {
-  flex-shrink: 0;
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
 }
 
-.avatar-box {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-light), var(--accent));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 20px 60px rgba(108, 92, 231, 0.2);
-  animation: float 6s ease-in-out infinite;
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
+.btn-primary:hover {
+  background: #3da87e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 192, 141, 0.35);
 }
 
-.avatar-placeholder {
-  font-size: 4rem;
-  color: #fff;
-  opacity: 0.9;
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid #ddd;
 }
 
-.scroll-indicator {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(8px);
-  }
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.2rem;
-  }
-
-  .hero-content {
-    flex-direction: column-reverse;
-    text-align: center;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .avatar-box {
-    width: 140px;
-    height: 140px;
-  }
-
-  .avatar-placeholder {
-    font-size: 3rem;
-  }
+  .hero-title { font-size: 2rem; }
+  .hero-desc { font-size: 1.05rem; }
 }
 </style>

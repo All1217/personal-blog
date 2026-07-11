@@ -1,3 +1,19 @@
+<template>
+  <div id="blog">
+    <NavBar />
+    <main>
+      <Hero />
+      <About />
+      <Projects />
+      <Writing />
+      <Gallery />
+      <Contact />
+    </main>
+    <FooterBar />
+    <BackToTop />
+  </div>
+</template>
+
 <script setup>
 import NavBar from './components/NavBar.vue'
 import Hero from './components/Hero.vue'
@@ -10,46 +26,25 @@ import FooterBar from './components/FooterBar.vue'
 import BackToTop from './components/BackToTop.vue'
 </script>
 
-<template>
-  <NavBar />
-  <Hero />
-  <About />
-  <Projects />
-  <Writing />
-  <Gallery />
-  <Contact />
-  <FooterBar />
-  <BackToTop />
-</template>
-
 <style>
-/* ============================
-   全局样式
-   ============================ */
-:root {
-  --bg-primary: #faf9f8;
-  --bg-alt: #ffffff;
-  --text-primary: #1a1a2e;
-  --text-secondary: #555770;
-  --text-muted: #8e8ea0;
-  --accent: #6c5ce7;
-  --accent-light: #a29bfe;
-  --accent-dark: #4834d4;
-  --border: #e8e8ee;
-  --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.10);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-*,
-*::before,
-*::after {
+/* ===== 全局重置 & 基础变量 ===== */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a2e;
+  --accent: #4FC08D;
+  --accent-light: #6dd5a0;
+  --gray: #f5f5f5;
+  --gray-dark: #666;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --radius: 16px;
+  --max-width: 1100px;
+  --transition: 0.3s ease;
 }
 
 html {
@@ -57,86 +52,72 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-.container {
-  max-width: 1100px;
+/* ===== 通用区域样式 ===== */
+section {
+  padding: 100px 24px;
+}
+
+.section-container {
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 24px;
-}
-
-.section {
-  padding: 90px 0;
-}
-
-.alt-bg {
-  background: var(--bg-alt);
 }
 
 .section-title {
   font-size: 2rem;
   font-weight: 700;
+  text-align: center;
   margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  position: relative;
 }
 
-.title-deco {
-  color: var(--accent);
-  font-size: 1.6rem;
+.section-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin: 12px auto 0;
 }
 
-.section-desc {
-  color: var(--text-muted);
-  margin-bottom: 40px;
+.section-subtitle {
+  text-align: center;
+  color: var(--gray-dark);
   font-size: 1.05rem;
+  margin-bottom: 60px;
 }
 
-.btn {
-  display: inline-block;
-  padding: 12px 28px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: var(--transition);
-  cursor: pointer;
-  border: 2px solid transparent;
+/* ===== 通用卡片 ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+.card {
+  background: var(--gray);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: transform var(--transition), box-shadow var(--transition);
+  cursor: default;
 }
 
-.btn-primary:hover {
-  background: var(--accent-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
 }
 
-.btn-outline {
-  background: transparent;
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn-outline:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
+/* ===== 响应式 ===== */
 @media (max-width: 768px) {
-  .section-title {
-    font-size: 1.6rem;
-  }
+  section { padding: 64px 16px; }
+  .section-title { font-size: 1.6rem; }
+  .section-subtitle { margin-bottom: 40px; }
 }
 </style>

@@ -1,103 +1,109 @@
-<script setup>
-import { ref } from 'vue'
-
-const articles = ref([
-  {
-    date: '2025.06',
-    category: '技术',
-    title: '从 0 搭建一个 Vue3 组件库',
-    desc: '记录我从零开始搭建个人组件库的全过程，包括工程化、打包、文档生成等。',
-    tag: '前端'
-  },
-  {
-    date: '2025.05',
-    category: '随笔',
-    title: '深夜代码与咖啡',
-    desc: '一些关于写代码时的思考与感悟，关于专注、心流和那些 Bug 教会我的事。',
-    tag: '生活'
-  },
-  {
-    date: '2025.04',
-    category: '技术',
-    title: 'CSS 现代布局完全指南',
-    desc: '从 Flexbox 到 Grid，从容器查询到层叠上下文，一文掌握现代 CSS 布局方案。',
-    tag: 'CSS'
-  },
-  {
-    date: '2025.03',
-    category: '小说',
-    title: '像素城市的黄昏',
-    desc: '一个关于 AI 与人类共存的短篇科幻故事——当代码拥有了灵魂。',
-    tag: '创作'
-  }
-])
-</script>
-
 <template>
-  <section id="writing" class="section">
-    <div class="container">
-      <h2 class="section-title"><span class="title-deco">✦</span> 文字创作</h2>
-      <div class="writing-list">
-        <div v-for="(article, index) in articles" :key="index" class="writing-item">
-          <div class="writing-meta">
-            <span>{{ article.date }}</span>
-            <span class="writing-tag">{{ article.category }}</span>
+  <section id="writing">
+    <div class="section-container">
+      <h2 class="section-title">文字创作</h2>
+      <p class="section-subtitle">Writing</p>
+
+      <div class="card-grid">
+        <article v-for="post in posts" :key="post.title" class="card post-card">
+          <div class="post-meta">
+            <time class="post-date">{{ post.date }}</time>
+            <span class="post-category">{{ post.category }}</span>
           </div>
-          <h3>{{ article.title }}</h3>
-          <p>{{ article.desc }}</p>
-        </div>
+          <h3 class="post-title">{{ post.title }}</h3>
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          <span class="post-link">阅读更多 →</span>
+        </article>
       </div>
     </div>
   </section>
 </template>
 
+<script setup>
+const posts = [
+  {
+    title: 'Vue 3 Composition API 实战指南',
+    date: '2024-12-15',
+    category: '前端',
+    excerpt: '深入理解 Vue 3 的 Composition API，通过实际案例掌握 setup、ref、reactive 等核心概念。'
+  },
+  {
+    title: '从零搭建个人设计系统',
+    date: '2024-11-28',
+    category: '设计',
+    excerpt: '分享如何从零开始构建一套可复用的 UI 设计系统，包含设计令牌、组件规范和文档。'
+  },
+  {
+    title: '2024 年终技术总结',
+    date: '2024-12-31',
+    category: '随笔',
+    excerpt: '回顾这一年的技术成长，分享学习心得和对未来的展望。'
+  },
+  {
+    title: 'Web 性能优化实践',
+    date: '2024-10-10',
+    category: '前端',
+    excerpt: '总结实际项目中的性能优化经验，涵盖加载、渲染、运行时等多个维度。'
+  }
+]
+</script>
+
 <style scoped>
-.writing-list {
+#writing {
+  background: var(--gray);
+}
+
+.post-card {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 780px;
 }
 
-.writing-item {
-  background: var(--bg-alt);
-  padding: 24px 28px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-  cursor: default;
-}
-
-.writing-item:hover {
-  border-color: var(--accent-light);
-  box-shadow: var(--shadow);
-}
-
-.writing-meta {
+.post-meta {
   display: flex;
+  align-items: center;
   gap: 12px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
 }
 
-.writing-item h3 {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
+.post-date {
+  color: var(--gray-dark);
 }
 
-.writing-item p {
-  color: var(--text-secondary);
-  font-size: 0.93rem;
-  line-height: 1.6;
-}
-
-.writing-tag {
+.post-category {
   display: inline-block;
   padding: 2px 10px;
-  background: rgba(108, 92, 231, 0.08);
+  background: var(--accent-light);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.post-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.post-excerpt {
+  color: var(--gray-dark);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.post-link {
+  display: inline-block;
+  margin-top: 16px;
   color: var(--accent);
-  border-radius: 50px;
-  font-size: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.post-card:hover .post-link {
+  gap: 8px;
 }
 </style>

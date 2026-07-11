@@ -1,61 +1,83 @@
-<script setup>
-</script>
-
 <template>
-  <section id="about" class="section">
-    <div class="container">
-      <h2 class="section-title"><span class="title-deco">✦</span> 关于我</h2>
-      <div class="about-card">
-        <p>我是墨羽，一名独立开发者 & 写作者。热衷于探索前端技术的边界，也享受在深夜敲下每一行有温度的文字。</p>
-        <p>目前专注于 Web 开发与开源项目，业余时间写写小说和随笔。</p>
-        <div class="tags">
-          <span class="tag">React</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">Node.js</span>
-          <span class="tag">Tailwind</span>
-          <span class="tag">写作</span>
-          <span class="tag">摄影</span>
+  <section id="about">
+    <div class="section-container">
+      <h2 class="section-title">关于我</h2>
+      <p class="section-subtitle">About Me</p>
+
+      <div class="about-content">
+        <div class="about-text">
+          <p>我是一名热爱技术的前端开发者，拥有多年 Web 开发经验。擅长使用 Vue.js、React 等现代框架构建高质量的用户界面。</p>
+          <p>我相信好的产品源自对细节的追求和对用户的深刻理解。在工作之余，我喜欢摄影、写作和探索新技术。</p>
+        </div>
+        <div class="about-stats">
+          <div v-for="stat in stats" :key="stat.label" class="stat-item">
+            <span class="stat-number">{{ stat.number }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </template>
 
+<script setup>
+const stats = [
+  { number: '5+', label: '年经验' },
+  { number: '30+', label: '项目' },
+  { number: '50+', label: '文章' },
+  { number: '10+', label: '客户' }
+]
+</script>
+
 <style scoped>
-.about-card {
-  background: var(--bg-alt);
-  padding: 36px 40px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  max-width: 720px;
+#about {
+  background: var(--gray);
 }
 
-.about-card p {
-  margin-bottom: 16px;
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-}
-
-.tags {
+.about-content {
   display: flex;
+  gap: 48px;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
 }
 
-.tag {
-  padding: 6px 16px;
-  background: rgba(108, 92, 231, 0.08);
+.about-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  min-width: 240px;
+}
+
+.stat-item {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
   color: var(--accent);
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 500;
 }
 
-@media (max-width: 768px) {
-  .about-card {
-    padding: 24px;
-  }
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--gray-dark);
+  margin-top: 4px;
 }
 </style>

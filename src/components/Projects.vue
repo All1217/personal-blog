@@ -1,45 +1,16 @@
-<script setup>
-import { ref } from 'vue'
-
-const projects = ref([
-  {
-    icon: '🎨',
-    title: 'Design System',
-    desc: '一套轻量级 Vue3 组件库，包含 30+ 常用组件，支持按需引入与主题定制。',
-    tech: ['Vue3', 'TypeScript', 'Rollup']
-  },
-  {
-    icon: '📝',
-    title: 'Noteblog',
-    desc: 'Markdown 驱动的个人笔记与博客系统，支持实时预览、标签分类与全文搜索。',
-    tech: ['Nuxt', 'MDC', 'SQLite']
-  },
-  {
-    icon: '🌤',
-    title: 'Weather Canvas',
-    desc: '可视化天气应用，使用 Canvas 实现动态天气粒子效果，数据来源于 OpenWeather。',
-    tech: ['Canvas', 'API', 'CSS']
-  },
-  {
-    icon: '🤖',
-    title: 'ChatUI',
-    desc: '可嵌入的 AI 对话界面组件，支持流式输出、多轮对话与自定义插件。',
-    tech: ['WebSocket', 'Vue3', 'Node.js']
-  }
-])
-</script>
-
 <template>
-  <section id="projects" class="section alt-bg">
-    <div class="container">
-      <h2 class="section-title"><span class="title-deco">✦</span> 个人项目</h2>
-      <div class="projects-grid">
-        <div v-for="(project, index) in projects" :key="index" class="project-card">
+  <section id="projects">
+    <div class="section-container">
+      <h2 class="section-title">个人项目</h2>
+      <p class="section-subtitle">Projects</p>
+
+      <div class="card-grid">
+        <div v-for="project in projects" :key="project.title" class="card project-card">
           <div class="project-icon">{{ project.icon }}</div>
-          <h3>{{ project.title }}</h3>
-          <p>{{ project.desc }}</p>
-          <div class="project-tech">
-            <span v-for="(tech, i) in project.tech" :key="i">{{ tech }}</span>
+          <h3 class="project-title">{{ project.title }}</h3>
+          <p class="project-desc">{{ project.desc }}</p>
+          <div class="project-tags">
+            <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
           </div>
         </div>
       </div>
@@ -47,63 +18,72 @@ const projects = ref([
   </section>
 </template>
 
+<script setup>
+const projects = [
+  {
+    icon: '🛒',
+    title: '电商平台',
+    desc: '全功能电商平台，支持商品展示、购物车、订单管理等模块。',
+    tags: ['Vue 3', 'Pinia', 'Tailwind']
+  },
+  {
+    icon: '📝',
+    title: '博客系统',
+    desc: 'Markdown 驱动的个人博客，支持标签分类、全文搜索。',
+    tags: ['Nuxt', 'Content v2', 'Drizzle']
+  },
+  {
+    icon: '🎨',
+    title: '设计系统',
+    desc: '可复用的 UI 组件库，包含 40+ 组件，支持主题定制。',
+    tags: ['React', 'Storybook', 'TypeScript']
+  },
+  {
+    icon: '📊',
+    title: '数据仪表盘',
+    desc: '实时数据可视化看板，支持多种图表类型和交互筛选。',
+    tags: ['ECharts', 'Vue', 'WebSocket']
+  }
+]
+</script>
+
 <style scoped>
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-}
-
 .project-card {
-  background: var(--bg-primary);
-  border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-  cursor: default;
-}
-
-.project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-hover);
+  text-align: center;
 }
 
 .project-icon {
-  font-size: 2rem;
-  margin-bottom: 12px;
+  font-size: 2.4rem;
+  margin-bottom: 16px;
 }
 
-.project-card h3 {
-  font-size: 1.15rem;
+.project-title {
+  font-size: 1.2rem;
+  font-weight: 700;
   margin-bottom: 8px;
 }
 
-.project-card p {
-  color: var(--text-secondary);
-  font-size: 0.93rem;
+.project-desc {
+  color: var(--gray-dark);
+  font-size: 0.92rem;
   margin-bottom: 16px;
   line-height: 1.6;
 }
 
-.project-tech {
+.project-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  justify-content: center;
 }
 
-.project-tech span {
+.tag {
+  display: inline-block;
   padding: 4px 12px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-@media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
+  background: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 500;
 }
 </style>

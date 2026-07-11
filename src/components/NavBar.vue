@@ -1,34 +1,43 @@
-<script setup>
-import { ref } from 'vue'
-
-const menuOpen = ref(false)
-
-function toggleMenu() {
-  menuOpen.value = !menuOpen.value
-}
-
-function closeMenu() {
-  menuOpen.value = false
-}
-</script>
-
 <template>
-  <header class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="logo">✧ 墨羽</a>
-      <nav class="nav-links" :class="{ open: menuOpen }">
-        <a href="#about" class="nav-link" @click="closeMenu">关于</a>
-        <a href="#projects" class="nav-link" @click="closeMenu">个人项目</a>
-        <a href="#writing" class="nav-link" @click="closeMenu">文字创作</a>
-        <a href="#gallery" class="nav-link" @click="closeMenu">光影集</a>
-        <a href="#contact" class="nav-link" @click="closeMenu">联系</a>
-      </nav>
-      <button class="mobile-menu-btn" :class="{ active: menuOpen }" @click="toggleMenu" aria-label="菜单">
+  <header class="navbar" :class="{ scrolled: scrolled }">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">Personal Blog</a>
+      <button class="nav-toggle" @click="menuOpen = !menuOpen" aria-label="切换菜单">
         <span></span><span></span><span></span>
       </button>
+      <nav :class="['nav-menu', { open: menuOpen }]">
+        <a v-for="item in menuItems" :key="item.href"
+           :href="item.href"
+           class="nav-link"
+           @click="menuOpen = false">
+          {{ item.label }}
+        </a>
+      </nav>
     </div>
   </header>
 </template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const scrolled = ref(false)
+const menuOpen = ref(false)
+
+const menuItems = [
+  { href: '#about', label: '关于' },
+  { href: '#projects', label: '项目' },
+  { href: '#writing', label: '文字' },
+  { href: '#gallery', label: '光影' },
+  { href: '#contact', label: '联系' }
+]
+
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 50
+}
+
+onMounted(() => window.addEventListener('scroll', handleScroll))
+onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+</script>
 
 <style scoped>
 .navbar {
@@ -36,127 +45,104 @@ function closeMenu() {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  background: rgba(250, 249, 248, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
   transition: var(--transition);
 }
 
+.navbar.scrolled {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
 .nav-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 64px;
 }
 
-.logo {
-  font-size: 1.3rem;
+.nav-logo {
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
-  letter-spacing: 1px;
 }
 
-.nav-links {
+.nav-menu {
   display: flex;
-  gap: 32px;
-  list-style: none;
+  gap: 8px;
 }
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-secondary);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 8px;
   font-size: 0.95rem;
-  font-weight: 500;
-  transition: var(--transition);
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
   transition: var(--transition);
 }
 
 .nav-link:hover {
+  background: var(--gray);
   color: var(--accent);
 }
 
-.nav-link:hover::after {
-  width: 100%;
-}
-
-.mobile-menu-btn {
+/* 汉堡菜单按钮 */
+.nav-toggle {
   display: none;
   flex-direction: column;
   gap: 5px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
 }
 
-.mobile-menu-btn span {
+.nav-toggle span {
   display: block;
-  width: 26px;
-  height: 2.5px;
-  background: var(--text-primary);
+  width: 24px;
+  height: 2px;
+  background: var(--text);
   border-radius: 2px;
   transition: var(--transition);
 }
 
-.mobile-menu-btn.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-
-.mobile-menu-btn.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.mobile-menu-btn.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
 @media (max-width: 768px) {
-  .nav-links {
+  .nav-toggle { display: flex; }
+
+  .nav-menu {
     position: fixed;
     top: 64px;
     left: 0;
     right: 0;
-    background: rgba(250, 249, 248, 0.97);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
     flex-direction: column;
-    gap: 0;
     padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    transform: translateY(-120%);
-    transition: var(--transition);
+    gap: 4px;
+    transform: translateY(-100%);
     opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
-  .nav-links.open {
+  .nav-menu.open {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto;
   }
 
   .nav-link {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-link:last-child {
-    border-bottom: none;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
+    padding: 12px 16px;
+    font-size: 1.05rem;
   }
 }
 </style>

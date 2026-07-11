@@ -1,65 +1,50 @@
+<template>
+  <button v-show="visible" class="back-to-top" @click="scrollToTop" aria-label="回到顶部">
+    ↑
+  </button>
+</template>
+
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const visible = ref(false)
 
-function handleScroll() {
-  visible.value = window.scrollY > 300
+const handleScroll = () => {
+  visible.value = window.scrollY > 400
 }
 
-function scrollToTop() {
+const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+onMounted(() => window.addEventListener('scroll', handleScroll))
+onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
-
-<template>
-  <button
-    class="back-to-top"
-    :class="{ visible }"
-    @click="scrollToTop"
-    aria-label="回到顶部"
-  >
-    ↑
-  </button>
-</template>
 
 <style scoped>
 .back-to-top {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
   background: var(--accent);
-  color: #fff;
+  color: white;
   border: none;
-  font-size: 1.2rem;
+  border-radius: 50%;
+  font-size: 1.3rem;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+  box-shadow: 0 4px 16px rgba(79, 192, 141, 0.35);
   transition: var(--transition);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  z-index: 99;
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .back-to-top:hover {
-  background: var(--accent-dark);
+  background: #3da87e;
   transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(79, 192, 141, 0.5);
 }
 </style>
