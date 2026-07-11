@@ -1,14 +1,7 @@
 <template>
   <div id="blog">
     <NavBar />
-    <main>
-      <Hero />
-      <About />
-      <Projects />
-      <Writing />
-      <Gallery />
-      <Contact />
-    </main>
+    <router-view />
     <FooterBar />
     <BackToTop />
   </div>
@@ -16,12 +9,6 @@
 
 <script setup>
 import NavBar from './components/NavBar.vue'
-import Hero from './components/Hero.vue'
-import About from './components/About.vue'
-import Projects from './components/Projects.vue'
-import Writing from './components/Writing.vue'
-import Gallery from './components/Gallery.vue'
-import Contact from './components/Contact.vue'
 import FooterBar from './components/FooterBar.vue'
 import BackToTop from './components/BackToTop.vue'
 </script>

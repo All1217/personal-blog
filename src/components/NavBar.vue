@@ -1,17 +1,20 @@
 <template>
   <header class="navbar" :class="{ scrolled: scrolled }">
     <div class="nav-container">
-      <a href="#" class="nav-logo">Personal Blog</a>
+      <router-link to="/" class="nav-logo">Personal Blog</router-link>
       <button class="nav-toggle" @click="menuOpen = !menuOpen" aria-label="切换菜单">
         <span></span><span></span><span></span>
       </button>
       <nav :class="['nav-menu', { open: menuOpen }]">
-        <a v-for="item in menuItems" :key="item.href"
-           :href="item.href"
-           class="nav-link"
-           @click="menuOpen = false">
+        <router-link
+          v-for="item in menuItems"
+          :key="item.to"
+          :to="item.to"
+          class="nav-link"
+          @click="menuOpen = false"
+        >
           {{ item.label }}
-        </a>
+        </router-link>
       </nav>
     </div>
   </header>
@@ -24,11 +27,12 @@ const scrolled = ref(false)
 const menuOpen = ref(false)
 
 const menuItems = [
-  { href: '#about', label: '关于' },
-  { href: '#projects', label: '项目' },
-  { href: '#writing', label: '文字' },
-  { href: '#gallery', label: '光影' },
-  { href: '#contact', label: '联系' }
+  { to: '/', label: '首页' },
+  { to: '/#about', label: '关于' },
+  { to: '/#projects', label: '项目' },
+  { to: '/#writing', label: '文字' },
+  { to: '/#gallery', label: '光影' },
+  { to: '/#contact', label: '联系' }
 ]
 
 const handleScroll = () => {
@@ -92,6 +96,12 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 .nav-link:hover {
   background: var(--gray);
   color: var(--accent);
+}
+
+/* 当前路由高亮 */
+.nav-link.router-link-exact-active {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* 汉堡菜单按钮 */

@@ -5,7 +5,12 @@
       <p class="section-subtitle">Writing</p>
 
       <div class="card-grid">
-        <article v-for="post in posts" :key="post.title" class="card post-card">
+        <router-link
+          v-for="post in posts"
+          :key="post.id"
+          :to="`/article/${post.id}`"
+          class="card post-card"
+        >
           <div class="post-meta">
             <time class="post-date">{{ post.date }}</time>
             <span class="post-category">{{ post.category }}</span>
@@ -13,7 +18,7 @@
           <h3 class="post-title">{{ post.title }}</h3>
           <p class="post-excerpt">{{ post.excerpt }}</p>
           <span class="post-link">阅读更多 →</span>
-        </article>
+        </router-link>
       </div>
     </div>
   </section>
@@ -22,24 +27,28 @@
 <script setup>
 const posts = [
   {
+    id: 1,
     title: 'Vue 3 Composition API 实战指南',
     date: '2024-12-15',
     category: '前端',
     excerpt: '深入理解 Vue 3 的 Composition API，通过实际案例掌握 setup、ref、reactive 等核心概念。'
   },
   {
+    id: 2,
     title: '从零搭建个人设计系统',
     date: '2024-11-28',
     category: '设计',
     excerpt: '分享如何从零开始构建一套可复用的 UI 设计系统，包含设计令牌、组件规范和文档。'
   },
   {
+    id: 3,
     title: '2024 年终技术总结',
     date: '2024-12-31',
     category: '随笔',
     excerpt: '回顾这一年的技术成长，分享学习心得和对未来的展望。'
   },
   {
+    id: 4,
     title: 'Web 性能优化实践',
     date: '2024-10-10',
     category: '前端',
@@ -56,6 +65,9 @@ const posts = [
 .post-card {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .post-meta {
