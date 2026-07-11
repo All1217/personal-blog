@@ -1,6 +1,7 @@
 # 📝 Personal Blog
 
 一个基于 **Vite + Vue 3** 构建的个人博客网站，采用组件化开发，风格简约大气。
+项目全程由Deepseek开发，使用的vibe coding编程工具就是个人自建的[All1217/My-Chat: 一个RAG项目，借助大模型构建个人知识库。](https://github.com/All1217/My-Chat/tree/main)。
 
 ## 🚀 技术栈
 
