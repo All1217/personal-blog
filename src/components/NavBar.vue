@@ -6,41 +6,86 @@
         <span></span><span></span><span></span>
       </button>
       <nav :class="['nav-menu', { open: menuOpen }]">
-        <router-link
+        <a
           v-for="item in menuItems"
-          :key="item.to"
-          :to="item.to"
+          :key="item.id"
           class="nav-link"
-          @click="menuOpen = false"
+          :class="{ active: activeSection === item.id }"
+          @click.prevent="handleNav(item.id)"
         >
           {{ item.label }}
-        </router-link>
+        </a>
       </nav>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useScroll } from '../composables/useScroll.js'
 
-const scrolled = ref(false)
+const router = useRouter()
+const route = useRoute()
+
 const menuOpen = ref(false)
 
+// 通过 composable 获取滚动状态（已含 rAF 节流）
+const { scrolled } = useScroll({ threshold: 50 })
+
+// 当前激活的锚点（用于高亮）
+const activeSection = ref('')
+
 const menuItems = [
-  { to: '/', label: '首页' },
-  { to: '/#about', label: '关于' },
-  { to: '/#projects', label: '项目' },
-  { to: '/#writing', label: '文字' },
-  { to: '/#gallery', label: '光影' },
-  { to: '/#contact', label: '联系' }
+  { id: 'home', label: '首页' },
+  { id: 'about', label: '关于' },
+  { id: 'projects', label: '项目' },
+  { id: 'writing', label: '文字' },
+  { id: 'gallery', label: '光影' },
+  { id: 'contact', label: '联系' }
 ]
 
-const handleScroll = () => {
-  scrolled.value = window.scrollY > 50
+/**
+ * 处理导航点击：
+ * - "首页"：跳转到路由 / 并滚动到顶部
+ * - 其他锚点：先确保在首页路由，再用 scrollIntoView 平滑滚动到对应 section
+ */
+const handleNav = (id) => {
+  menuOpen.value = false
+
+  if (id === 'home') {
+    // 如果不在首页，先跳转；如果在首页，直接滚动到顶部
+    if (route.path !== '/') {
+      router.push('/').then(() => scrollToTop())
+    } else {
+      scrollToTop()
+    }
+    return
+  }
+
+  // 锚点导航：如果不在首页，先跳转到首页再滚动
+  const scrollToSection = () => {
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      activeSection.value = id
+    }
+  }
+
+  if (route.path !== '/') {
+    router.push('/').then(() => {
+      // 等待 DOM 渲染完成后滚动
+      setTimeout(scrollToSection, 50)
+    })
+  } else {
+    scrollToSection()
+  }
 }
 
-onMounted(() => window.addEventListener('scroll', handleScroll))
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+  activeSection.value = ''
+}
 </script>
 
 <style scoped>
@@ -91,6 +136,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   border-radius: 8px;
   font-size: 0.95rem;
   transition: var(--transition);
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -98,8 +144,8 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   color: var(--accent);
 }
 
-/* 当前路由高亮 */
-.nav-link.router-link-exact-active {
+/* 当前激活的锚点高亮 */
+.nav-link.active {
   color: var(--accent);
   font-weight: 600;
 }

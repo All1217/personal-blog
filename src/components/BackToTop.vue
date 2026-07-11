@@ -1,24 +1,18 @@
 <template>
-  <button v-show="visible" class="back-to-top" @click="scrollToTop" aria-label="回到顶部">
+  <button v-show="backVisible" class="back-to-top" @click="scrollToTop" aria-label="回到顶部">
     ↑
   </button>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { useScroll } from '../composables/useScroll.js'
 
-const visible = ref(false)
-
-const handleScroll = () => {
-  visible.value = window.scrollY > 400
-}
+// 复用同一个 composable，scroll 监听和节流已在内部统一处理
+const { backVisible } = useScroll({ showBtnAt: 400 })
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
-
-onMounted(() => window.addEventListener('scroll', handleScroll))
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <style scoped>
