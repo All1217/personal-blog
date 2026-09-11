@@ -1,0 +1,13 @@
+@import './variables.less';
+
+.flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile(@rules) {
+  @media (max-width: @breakpoint-mobile) {
+    @rules();
+  }
+}

@@ -1,0 +1,26 @@
+@import './variables.less';
+
+.page-wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-block {
+  padding: 48px 0 8px;
+  border-top: 1px solid var(--border);
+
+  @media (max-width: @breakpoint-mobile) {
+    padding: 36px 0 4px;
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+
+  @media (max-width: @breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}

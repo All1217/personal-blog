@@ -1,19 +1,20 @@
 <template>
   <main>
-    <Hero />
-    <About />
-    <Projects />
-    <Writing />
-    <Gallery />
-    <Contact />
+    <ProfileIntro />
+    <component
+      :is="section.component"
+      v-for="section in sections"
+      :id="section.id"
+      :key="section.id"
+      :i18n-key="section.i18nKey"
+      :subtitle-key="section.subtitleKey"
+    />
   </main>
 </template>
 
-<script setup>
-import Hero from '../components/Hero.vue'
-import About from '../components/About.vue'
-import Projects from '../components/Projects.vue'
-import Writing from '../components/Writing.vue'
-import Gallery from '../components/Gallery.vue'
-import Contact from '../components/Contact.vue'
+<script setup lang="ts">
+import ProfileIntro from '../components/ProfileIntro.vue'
+import { getEnabledSections } from '../sections/registry'
+
+const sections = getEnabledSections()
 </script>

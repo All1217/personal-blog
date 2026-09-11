@@ -1,87 +1,55 @@
-# 📝 Personal Blog
+# Personal Blog
 
-一个基于 **Vite + Vue 3** 构建的个人博客网站，采用组件化开发，风格简约大气。
-项目全程由Deepseek开发，使用的vibe coding编程工具就是个人自建的[All1217/My-Chat: 一个RAG项目，借助大模型构建个人知识库。](https://github.com/All1217/My-Chat/tree/main)。
+一个基于 **Vite + Vue 3 + TypeScript + Less** 的个人博客。当前是单页首页：简介、开源项目、文字创作，支持明暗主题与中英文切换。
 
-## 🚀 技术栈
+## 技术栈
 
 | 技术 | 说明 |
 |------|------|
-| **Vue 3** | 渐进式 JavaScript 框架（Composition API） |
-| **Vite** | 下一代前端构建工具（快速冷启动、热更新） |
-| **JavaScript** | 核心开发语言 |
-| **CSS3** | 纯 CSS 实现响应式布局与动画 |
+| Vue 3 | Composition API + `<script setup lang="ts">` |
+| Vite | 开发与构建 |
+| TypeScript | `vue-tsc` 类型检查 |
+| Less | 嵌套、mixin、CSS 变量主题 |
 
-## 📁 项目结构
-
-```
-personal-blog/
-├── index.html                 # 入口 HTML
-├── package.json               # 依赖与脚本配置
-├── vite.config.js             # Vite 配置（端口 5100）
-├── public/
-│   └── vite.svg               # 网站图标
-└── src/
-    ├── main.js                # 应用入口
-    ├── App.vue                # 根组件（全局布局）
-    └── components/
-        ├── NavBar.vue         # 导航栏（响应式菜单）
-        ├── Hero.vue           # 首页英雄区域
-        ├── About.vue          # 关于我
-        ├── Projects.vue       # 个人项目展示
-        ├── Writing.vue        # 文字创作
-        ├── Gallery.vue        # 光影集
-        ├── Contact.vue        # 联系方式
-        ├── FooterBar.vue      # 页脚
-        └── BackToTop.vue      # 回到顶部按钮
-```
-
-## 🛠️ 本地运行
+## 本地运行
 
 ```bash
-# 1️⃣ 克隆项目
-git clone https://github.com/your-username/personal-blog.git
-cd personal-blog
-
-# 2️⃣ 安装依赖
 npm install
-
-# 3️⃣ 启动开发服务器（默认 http://localhost:5100）
 npm run dev
 ```
 
-## 📦 生产构建
+开发服务器默认 http://localhost:5100 。
 
 ```bash
 npm run build
 ```
 
-构建产物输出到 `dist/` 目录，可直接部署到任意静态服务器（Nginx、Vercel、Netlify 等）。
+## 扩展新板块
 
-## 🌐 功能特性
+1. 在 `src/sections/` 新增 `XxxSection.vue`（可复用 `SectionBlock`）
+2. 在 [`src/sections/registry.ts`](src/sections/registry.ts) 追加一条 `blogSections` 记录（`id` / `order` / `enabled` / i18n key / 组件）
+3. 在 `src/i18n/zh.ts` 与 `src/i18n/en.ts` 补标题和副标题
 
-- ✅ 纯前端 SPA，无需后端服务
-- ✅ 响应式布局，适配桌面 / 平板 / 手机
-- ✅ 平滑滚动导航
-- ✅ 回到顶部按钮
-- ✅ 导航栏滚动高亮当前区域
-- ✅ 组件化架构，易于扩展
+顶栏锚点导航会按 registry 自动生成。
 
-## 📄 页面内容
+## 目录
 
-| 区块 | 说明 |
-|------|------|
-| 🏠 Hero | 个人简介标语 |
-| 👤 About | 个人背景介绍 |
-| 💼 Projects | 项目作品展示 |
-| ✍️ Writing | 文章 / 随笔列表 |
-| 📸 Gallery | 摄影 / 设计作品 |
-| 📬 Contact | 联系方式与社交链接 |
+```
+src/
+  App.vue
+  views/HomePage.vue
+  sections/registry.ts
+  sections/OpenSourceSection.vue
+  sections/WritingSection.vue
+  components/
+  data/profile.ts
+  data/projects.ts
+  data/writings.ts
+  composables/useTheme.ts
+  composables/useI18n.ts
+  i18n/zh.ts
+  i18n/en.ts
+  styles/
+```
 
-## 📃 许可证
-
-本项目仅供学习和个人使用。
-
----
-
-*Made with ❤️ using Vue 3 + Vite*
+主题与语言偏好分别写入 `localStorage` 的 `theme`、`locale`。
