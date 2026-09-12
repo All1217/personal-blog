@@ -8,6 +8,21 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/HomePage.vue')
   },
   {
+    path: '/writing',
+    name: 'WritingIndex',
+    component: () => import('../views/WritingIndex.vue')
+  },
+  {
+    path: '/writing/:category/:slug',
+    name: 'Writing',
+    component: () => import('../views/WritingView.vue')
+  },
+  {
+    path: '/writing/:category',
+    name: 'WritingCategory',
+    component: () => import('../views/WritingIndex.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }

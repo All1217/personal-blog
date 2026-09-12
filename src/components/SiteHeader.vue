@@ -1,13 +1,16 @@
 <template>
   <header class="site-header">
     <div class="page-wrap site-header__inner">
-      <a class="brand" href="#intro">{{ t('site.name') }}</a>
+      <a class="brand" href="/#intro">{{ t('site.name') }}</a>
 
       <nav class="nav" aria-label="primary">
-        <a href="#intro">{{ t('nav.intro') }}</a>
-        <a v-for="section in sections" :key="section.id" :href="`#${section.id}`">
-          {{ t(section.i18nKey) }}
-        </a>
+        <a href="/#intro">{{ t('nav.intro') }}</a>
+        <template v-for="section in sections" :key="section.id">
+          <router-link v-if="section.href" :to="section.href">
+            {{ t(section.i18nKey) }}
+          </router-link>
+          <a v-else :href="`/#${section.id}`">{{ t(section.i18nKey) }}</a>
+        </template>
       </nav>
 
       <div class="toggles">
@@ -99,7 +102,8 @@ const sections = getEnabledSections()
     border-radius: 999px;
     white-space: nowrap;
 
-    &:hover {
+    &:hover,
+    &.router-link-active {
       color: var(--text-heading);
       background: var(--bg-muted);
     }

@@ -1,20 +1,14 @@
 <template>
   <article class="writing-card">
     <div class="writing-card__meta">
-      <time>{{ writing.date }}</time>
+      <span>{{ t(`writing.${writing.category}`) }}</span>
       <span class="dot">·</span>
-      <span>{{ tx(writing.category) }}</span>
+      <time>{{ writing.date }}</time>
       <span class="dot">·</span>
       <span>{{ writing.readMinutes }} {{ t('actions.minutes') }}</span>
     </div>
     <h3>
-      <a
-        v-if="writing.href && writing.href !== '#'"
-        :href="writing.href"
-        target="_blank"
-        rel="noreferrer"
-      >{{ tx(writing.title) }}</a>
-      <span v-else>{{ tx(writing.title) }}</span>
+      <router-link :to="writingPath(writing)">{{ tx(writing.title) }}</router-link>
     </h3>
     <p>{{ tx(writing.excerpt) }}</p>
   </article>
@@ -22,6 +16,7 @@
 
 <script setup lang="ts">
 import type { Writing } from '../types'
+import { writingPath } from '../data/loadWritings'
 import { useI18n } from '../composables/useI18n'
 
 defineProps<{

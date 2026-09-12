@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" fill="none">
+  <rect width="960" height="420" rx="16" fill="#ccfbf1"/>
+  <rect x="56" y="72" width="240" height="276" rx="12" fill="#0f766e"/>
+  <rect x="336" y="72" width="240" height="128" rx="12" fill="#134e4a"/>
+  <rect x="336" y="220" width="240" height="128" rx="12" fill="#115e59"/>
+  <rect x="616" y="72" width="288" height="276" rx="12" fill="#0d9488"/>
+  <text x="80" y="220" fill="#ecfdf5" font-size="22" font-family="Segoe UI, sans-serif">fetch</text>
+  <text x="360" y="148" fill="#ecfdf5" font-size="22" font-family="Segoe UI, sans-serif">table</text>
+  <text x="360" y="296" fill="#ecfdf5" font-size="22" font-family="Segoe UI, sans-serif">dialog</text>
+  <text x="700" y="220" fill="#ecfdf5" font-size="22" font-family="Segoe UI, sans-serif">page</text>
+</svg>

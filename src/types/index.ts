@@ -41,14 +41,28 @@ export interface Project {
   status: Localized
 }
 
+export const WRITING_CATEGORY_IDS = ['career', 'notes', 'anime'] as const
+export type WritingCategoryId = (typeof WRITING_CATEGORY_IDS)[number]
+
+/** 判断路径参数是否为已登记栏目 */
+export function isWritingCategory(value: string): value is WritingCategoryId {
+  return (WRITING_CATEGORY_IDS as readonly string[]).includes(value)
+}
+
+export interface BreadcrumbItem {
+  label: string
+  to?: string
+}
+
 export interface Writing {
-  id: string
+  slug: string
+  category: WritingCategoryId
   title: Localized
   excerpt: Localized
   date: string
-  category: Localized
   readMinutes: number
-  href?: string
+  cover?: string
+  body: string
 }
 
 export interface BlogSection {
@@ -58,4 +72,6 @@ export interface BlogSection {
   i18nKey: string
   subtitleKey: string
   component: Component
+  /** 独立页面路径；缺省则顶栏跳首页锚点 */
+  href?: string
 }

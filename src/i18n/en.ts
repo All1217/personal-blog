@@ -4,6 +4,7 @@ export const en = {
     title: 'Lin Mo · Engineer / Writer'
   },
   nav: {
+    home: 'Home',
     intro: 'Intro',
     menu: 'Open navigation'
   },
@@ -13,7 +14,9 @@ export const en = {
     localeToEn: 'Switch to English',
     localeToZh: '切换到中文',
     viewRepo: 'Repo',
-    minutes: 'min'
+    minutes: 'min',
+    backHome: 'Back to home',
+    backToTop: 'Back to top'
   },
   intro: {
     basedIn: 'Based in'
@@ -22,7 +25,20 @@ export const en = {
     opensource: 'Open Source',
     opensourceSub: 'Tools, experiments, and long-running projects, ordered by recent activity',
     writing: 'Writing',
-    writingSub: 'Engineering notes, postmortems, and essays on problems still being figured out'
+    writingSub: 'Latest pieces; the full list lives on its own page'
+  },
+  writing: {
+    search: 'Search titles, body, or categories',
+    empty: 'No matching articles',
+    all: 'All',
+    allArticles: 'All articles',
+    latest: 'Latest',
+    unit: 'articles',
+    career: 'Career',
+    notes: 'Notes',
+    anime: 'Anime',
+    notFound: 'This article was not found',
+    toc: 'On this page'
   },
   footer: {
     builtWith: 'Built with Vue 3 · TypeScript · Less',

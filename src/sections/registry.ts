@@ -17,10 +17,12 @@ export const blogSections: BlogSection[] = [
     enabled: true,
     i18nKey: 'sections.writing',
     subtitleKey: 'sections.writingSub',
-    component: WritingSection
+    component: WritingSection,
+    href: '/writing'
   }
 ]
 
+/** 返回已启用且按 order 排序的板块 */
 export function getEnabledSections(): BlogSection[] {
   return blogSections
     .filter((section) => section.enabled)
