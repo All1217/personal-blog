@@ -58,10 +58,37 @@ function estimateMinutes(body: string, override?: string): number {
   return Math.max(1, Math.round(chars / 400))
 }
 
+function toPublicUrl(...segments: string[]): string {
+  return `/${segments
+    .flatMap((segment) => segment.replace(/\\/g, '/').split('/').filter(Boolean))
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')}`
+}
+
+/**
+ * 把 Markdown 里的图片地址收成浏览器能访问的路径。
+ * `public/` 在站点上就是根路径，所以 `../../../public/writings/foo.png` → `/writings/foo.png`。
+ * `./cover.webp` 仍按约定落到 `/writings/<栏目>/<slug>/cover.webp`。
+ */
+export function resolveImageSrc(src: string, writing: { category: string; slug: string }): string {
+  const trimmed = src.trim().replace(/\\/g, '/')
+  if (!trimmed) return trimmed
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('/')) return trimmed
+
+  const publicIndex = trimmed.search(/(?:^|\/)public\//)
+  if (publicIndex !== -1) {
+    return toPublicUrl(trimmed.slice(publicIndex).replace(/^\/?public\//, ''))
+  }
+
+  const filename = trimmed.replace(/^\.\//, '')
+  if (filename.startsWith('../')) return trimmed
+
+  return toPublicUrl('writings', writing.category, writing.slug, filename)
+}
+
 function resolveCover(category: WritingCategoryId, slug: string, cover?: string): string | undefined {
   if (!cover) return undefined
-  if (cover.startsWith('http') || cover.startsWith('/')) return cover
-  return `/writings/${category}/${slug}/${cover.replace(/^\.\//, '')}`
+  return resolveImageSrc(cover, { category, slug })
 }
 
 function loadAllWritings(): Writing[] {
@@ -100,7 +127,7 @@ export function writingPath(writing: Writing): string {
 }
 
 export function rewriteMarkdownImages(body: string, writing: Writing): string {
-  return body.replace(/!\[([^\]]*)\]\((?!https?:|\/)(?:\.\/)?([^)]+)\)/g, (_full, alt: string, src: string) => {
-    return `![${alt}](/writings/${writing.category}/${writing.slug}/${src})`
+  return body.replace(/!\[([^\]]*)\]\((?!https?:)([^)]+)\)/g, (_full, alt: string, src: string) => {
+    return `![${alt}](${resolveImageSrc(src, writing)})`
   })
 }

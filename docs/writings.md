@@ -82,6 +82,7 @@ frontmatter 只支持「一行一个 `key: value`」，不要写嵌套 YAML 或�
 - 文件放在 `public/writings/<栏目>/<slug>/` 下，可任意文件名（`.webp` / `.png` / `.jpg` / `.svg` 等）。
 - 正文里优先写相对路径：`![说明](./cover.webp)` 或 `![说明](cover.webp)`，加载时会改写成 `/writings/<栏目>/<slug>/cover.webp`。
 - 已经是 `/...` 或 `http(s)://...` 的地址不会改写。
+- 从 Markdown 指到 `public/` 的相对路径（例如 `../../../public/writings/career/foo.png`）会收成站点根路径 `/writings/career/foo.png`。Vite 会把 `public/` 映射到网站根，中间那些 `../` 不能原样拼进 URL。
 - `cover` 同样：写文件名即可，规则与相对路径图片相同。
 
 一篇文章多张图时，都放在该篇的 `public/writings/<栏目>/<slug>/` 目录里，不要共用别的 slug 文件夹。
