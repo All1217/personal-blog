@@ -54,15 +54,20 @@ export interface BreadcrumbItem {
   to?: string
 }
 
+export interface LocalizedNumber {
+  zh: number
+  en: number
+}
+
 export interface Writing {
   slug: string
   category: WritingCategoryId
   title: Localized
   excerpt: Localized
   date: string
-  readMinutes: number
+  readMinutes: LocalizedNumber
   cover?: string
-  body: string
+  body: Localized
 }
 
 export interface BlogSection {

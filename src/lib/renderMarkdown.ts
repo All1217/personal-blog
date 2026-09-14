@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import type { Writing } from '../types'
+import type { Locale, Writing } from '../types'
 import { rewriteMarkdownImages } from '../data/loadWritings'
 
 export interface TocItem {
@@ -36,9 +36,9 @@ function stripInlineMarkup(text: string): string {
   return text.replace(/\*\*|__/g, '').replace(/\*/g, '').trim()
 }
 
-/** 解析文章：写入标题 id，并抽出 h1–h3 目录 */
-export function renderWriting(writing: Writing): { html: string; toc: TocItem[] } {
-  const source = rewriteMarkdownImages(writing.body, writing)
+/** 解析当前语言的正文：写入标题 id，并抽出 h1–h3 目录 */
+export function renderWriting(writing: Writing, locale: Locale): { html: string; toc: TocItem[] } {
+  const source = rewriteMarkdownImages(writing.body[locale], writing)
   const tokens = md.parse(source, {})
   const toc: TocItem[] = []
   let index = 0
@@ -66,6 +66,6 @@ export function renderWriting(writing: Writing): { html: string; toc: TocItem[] 
 }
 
 /** 只要 HTML 的兼容入口 */
-export function renderWritingHtml(writing: Writing): string {
-  return renderWriting(writing).html
+export function renderWritingHtml(writing: Writing, locale: Locale): string {
+  return renderWriting(writing, locale).html
 }

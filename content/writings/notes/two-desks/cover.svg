@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title">
+  <title id="title">Two desks</title>
+  <rect width="960" height="420" fill="#e8e4db"/>
+  <rect x="48" y="56" width="400" height="308" rx="12" fill="#f7f4ee" stroke="#2a2a28" stroke-width="2"/>
+  <rect x="512" y="56" width="400" height="308" rx="12" fill="#f7f4ee" stroke="#2a2a28" stroke-width="2"/>
+  <rect x="88" y="96" width="220" height="12" rx="6" fill="#2a2a28"/>
+  <rect x="88" y="128" width="320" height="8" rx="4" fill="#8a8680"/>
+  <rect x="88" y="152" width="280" height="8" rx="4" fill="#8a8680"/>
+  <rect x="552" y="96" width="180" height="12" rx="6" fill="#2a2a28"/>
+  <rect x="552" y="128" width="300" height="8" rx="4" fill="#8a8680"/>
+  <rect x="552" y="152" width="260" height="8" rx="4" fill="#8a8680"/>
+  <circle cx="480" cy="248" r="36" fill="#c45c26"/>
+  <circle cx="480" cy="248" r="22" fill="#f7f4ee"/>
+</svg>

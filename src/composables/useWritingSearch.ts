@@ -37,7 +37,7 @@ export function useWritingSearch(
       title: tx(writing.title),
       excerpt: tx(writing.excerpt),
       categoryLabel: t(`writing.${writing.category}`),
-      body: writing.body
+      body: tx(writing.body)
     }))
   )
 

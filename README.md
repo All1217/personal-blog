@@ -17,7 +17,7 @@ npm run build
 
 ## 文章和配图
 
-约定见 [docs/writings.md](docs/writings.md)。正文在 `content/writings/`，配图在 `public/writings/`。
+约定见 [docs/writings.md](docs/writings.md)。每篇文章一个文件夹：`zh.md` / 可选的 `en.md` 和配图放在 `content/writings/<栏目>/<slug>/`。
 
 ## 扩展新板块
 
@@ -28,8 +28,7 @@ npm run build
 ## 目录
 
 ```
-content/writings/     # 文章源文件
-public/writings/      # 文章配图
+content/writings/     # 一篇一夹：zh.md / en.md 与配图
 src/
   data/loadWritings.ts
   views/WritingIndex.vue

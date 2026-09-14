@@ -1,4 +1,4 @@
-import type { Localized, Writing, WritingCategoryId } from '../types'
+import type { Locale, Localized, LocalizedNumber, Writing, WritingCategoryId } from '../types'
 import { WRITING_CATEGORY_IDS } from '../types'
 
 interface Frontmatter {
@@ -11,8 +11,25 @@ interface Frontmatter {
   minutes?: string
 }
 
-const files = import.meta.glob('../../content/writings/**/*.md', {
+interface LocaleDoc {
+  data: Frontmatter
+  content: string
+}
+
+interface WritingGroup {
+  category: WritingCategoryId
+  slug: string
+  locales: Partial<Record<Locale, LocaleDoc>>
+}
+
+const markdownFiles = import.meta.glob('../../content/writings/**/*.md', {
   query: '?raw',
+  import: 'default',
+  eager: true
+}) as Record<string, string>
+
+const imageFiles = import.meta.glob('../../content/writings/**/*.{png,jpg,jpeg,webp,gif,svg}', {
+  query: '?url',
   import: 'default',
   eager: true
 }) as Record<string, string>
@@ -33,20 +50,21 @@ function parseFrontmatter(raw: string): { data: Frontmatter; content: string } {
   return { data, content: match[2].trim() }
 }
 
-function localized(zh: string, en?: string): Localized {
-  return { zh, en: en || zh }
-}
-
 function isCategory(value: string): value is WritingCategoryId {
   return (WRITING_CATEGORY_IDS as readonly string[]).includes(value)
 }
 
-function parsePath(path: string): { category: WritingCategoryId; slug: string } | null {
-  const match = path.replace(/\\/g, '/').match(/content\/writings\/([^/]+)\/([^/]+)\.md$/)
+function isLocale(value: string): value is Locale {
+  return value === 'zh' || value === 'en'
+}
+
+/** 只认 content/writings/<栏目>/<slug>/(zh|en).md */
+function parsePath(path: string): { category: WritingCategoryId; slug: string; locale: Locale } | null {
+  const match = path.replace(/\\/g, '/').match(/content\/writings\/([^/]+)\/([^/]+)\/(zh|en)\.md$/)
   if (!match) return null
-  const [, category, slug] = match
-  if (!isCategory(category)) return null
-  return { category, slug }
+  const [, category, slug, locale] = match
+  if (!isCategory(category) || !isLocale(locale)) return null
+  return { category, slug, locale }
 }
 
 function estimateMinutes(body: string, override?: string): number {
@@ -65,10 +83,18 @@ function toPublicUrl(...segments: string[]): string {
     .join('/')}`
 }
 
+/** 在同目录配图 glob 里按栏目/slug/文件名取 Vite 生成的 URL */
+function lookupAsset(category: string, slug: string, filename: string): string | undefined {
+  const suffix = `content/writings/${category}/${slug}/${filename}`
+  for (const [path, url] of Object.entries(imageFiles)) {
+    if (path.replace(/\\/g, '/').endsWith(suffix)) return url
+  }
+  return undefined
+}
+
 /**
  * 把 Markdown 里的图片地址收成浏览器能访问的路径。
- * `public/` 在站点上就是根路径，所以 `../../../public/writings/foo.png` → `/writings/foo.png`。
- * `./cover.webp` 仍按约定落到 `/writings/<栏目>/<slug>/cover.webp`。
+ * 同目录相对路径走 Vite 资源 URL；`/public/...` 相对路径收成站点根路径。
  */
 export function resolveImageSrc(src: string, writing: { category: string; slug: string }): string {
   const trimmed = src.trim().replace(/\\/g, '/')
@@ -83,7 +109,7 @@ export function resolveImageSrc(src: string, writing: { category: string; slug: 
   const filename = trimmed.replace(/^\.\//, '')
   if (filename.startsWith('../')) return trimmed
 
-  return toPublicUrl('writings', writing.category, writing.slug, filename)
+  return lookupAsset(writing.category, writing.slug, filename) ?? trimmed
 }
 
 function resolveCover(category: WritingCategoryId, slug: string, cover?: string): string | undefined {
@@ -91,26 +117,59 @@ function resolveCover(category: WritingCategoryId, slug: string, cover?: string)
   return resolveImageSrc(cover, { category, slug })
 }
 
-function loadAllWritings(): Writing[] {
-  const writings: Writing[] = []
+function mergeGroup(group: WritingGroup): Writing | null {
+  const zh = group.locales.zh
+  const en = group.locales.en
+  if (!zh?.data.title && !en?.data.title) return null
 
-  for (const [path, raw] of Object.entries(files)) {
+  const titleZh = zh?.data.title || en?.data.title || ''
+  const titleEn = en?.data.title || zh?.data.titleEn || titleZh
+  const excerptZh = zh?.data.excerpt || en?.data.excerpt || ''
+  const excerptEn = en?.data.excerpt || zh?.data.excerptEn || excerptZh
+  const bodyZh = zh?.content || en?.content || ''
+  const bodyEn = en?.content || zh?.content || ''
+
+  const title: Localized = { zh: titleZh, en: titleEn }
+  const excerpt: Localized = { zh: excerptZh, en: excerptEn }
+  const body: Localized = { zh: bodyZh, en: bodyEn }
+  const readMinutes: LocalizedNumber = {
+    zh: estimateMinutes(bodyZh, zh?.data.minutes ?? (zh ? undefined : en?.data.minutes)),
+    en: estimateMinutes(bodyEn, en?.data.minutes ?? (en ? undefined : zh?.data.minutes))
+  }
+
+  return {
+    slug: group.slug,
+    category: group.category,
+    title,
+    excerpt,
+    date: zh?.data.date || en?.data.date || '1970-01-01',
+    readMinutes,
+    cover: resolveCover(group.category, group.slug, zh?.data.cover || en?.data.cover),
+    body
+  }
+}
+
+function loadAllWritings(): Writing[] {
+  const groups = new Map<string, WritingGroup>()
+
+  for (const [path, raw] of Object.entries(markdownFiles)) {
     const parsedPath = parsePath(path)
     if (!parsedPath) continue
 
-    const { data, content } = parseFrontmatter(raw)
-    if (!data.title) continue
-
-    writings.push({
-      slug: parsedPath.slug,
+    const key = `${parsedPath.category}/${parsedPath.slug}`
+    const group = groups.get(key) ?? {
       category: parsedPath.category,
-      title: localized(data.title, data.titleEn),
-      excerpt: localized(data.excerpt ?? '', data.excerptEn),
-      date: data.date ?? '1970-01-01',
-      readMinutes: estimateMinutes(content, data.minutes),
-      cover: resolveCover(parsedPath.category, parsedPath.slug, data.cover),
-      body: content
-    })
+      slug: parsedPath.slug,
+      locales: {}
+    }
+    group.locales[parsedPath.locale] = parseFrontmatter(raw)
+    groups.set(key, group)
+  }
+
+  const writings: Writing[] = []
+  for (const group of groups.values()) {
+    const writing = mergeGroup(group)
+    if (writing) writings.push(writing)
   }
 
   return writings.sort((a, b) => (a.date < b.date ? 1 : -1))

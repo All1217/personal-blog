@@ -23,7 +23,7 @@
                 <span>·</span>
                 <time>{{ writing.date }}</time>
                 <span>·</span>
-                <span>{{ writing.readMinutes }} {{ t('actions.minutes') }}</span>
+                <span>{{ writing.readMinutes[locale] }} {{ t('actions.minutes') }}</span>
               </p>
               <h1>{{ tx(writing.title) }}</h1>
               <p class="excerpt">{{ tx(writing.excerpt) }}</p>
@@ -49,16 +49,16 @@ import { useI18n } from '../composables/useI18n'
 import { isWritingCategory, type BreadcrumbItem } from '../types'
 
 const route = useRoute()
-const { t, tx } = useI18n()
+const { t, tx, locale } = useI18n()
 
 /** 按栏目 + slug 取当前文章 */
 const writing = computed(() =>
   getWriting(String(route.params.category), String(route.params.slug))
 )
 
-/** 同时得到正文 HTML 与目录 */
+/** 按当前语言渲染正文 HTML 与目录 */
 const rendered = computed(() =>
-  writing.value ? renderWriting(writing.value) : { html: '', toc: [] }
+  writing.value ? renderWriting(writing.value, locale.value) : { html: '', toc: [] }
 )
 
 const html = computed(() => rendered.value.html)

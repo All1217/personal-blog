@@ -5,7 +5,7 @@
       <span class="dot">·</span>
       <time>{{ writing.date }}</time>
       <span class="dot">·</span>
-      <span>{{ writing.readMinutes }} {{ t('actions.minutes') }}</span>
+      <span>{{ writing.readMinutes[locale] }} {{ t('actions.minutes') }}</span>
     </div>
     <h3>
       <router-link :to="writingPath(writing)">{{ tx(writing.title) }}</router-link>
@@ -23,7 +23,7 @@ defineProps<{
   writing: Writing
 }>()
 
-const { t, tx } = useI18n()
+const { t, tx, locale } = useI18n()
 </script>
 
 <style scoped lang="less">

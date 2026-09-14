@@ -1,6 +1,6 @@
 # 文字创作：文章与配图约定
 
-本站不使用数据库或后端加载文章。Markdown 和配图都放在仓库里，构建时由 Vite 收入站点。实现见 [`src/data/loadWritings.ts`](../src/data/loadWritings.ts)。
+本站不使用数据库或后端加载文章。每篇文章一个文件夹，中英文 Markdown 和配图放在一起，构建时由 Vite 收入站点。实现见 [`src/data/loadWritings.ts`](../src/data/loadWritings.ts)。
 
 ## 目录
 
@@ -8,23 +8,29 @@
 |------|------|------------|
 | 索引（全部） | — | `/writing`，搜索 `?q=` |
 | 索引（栏目） | — | `/writing/<栏目>` |
-| 正文 | `content/writings/<栏目>/<slug>.md` | `/writing/<栏目>/<slug>` |
-| 配图 | `public/writings/<栏目>/<slug>/` | 静态资源 `/writings/<栏目>/<slug>/<文件名>` |
+| 中文正文 | `content/writings/<栏目>/<slug>/zh.md` | `/writing/<栏目>/<slug>` |
+| 英文正文 | `content/writings/<栏目>/<slug>/en.md`（可选） | 同一 URL，随站点语言切换 |
+| 配图 | `content/writings/<栏目>/<slug>/` | 构建期生成的资源 URL |
 
-`<slug>` 是文件名（不含 `.md`），也是 URL 最后一段。同一篇文章的正文和配图必须使用相同的 `<栏目>` 与 `<slug>`。
+`<slug>` 是文章文件夹名，也是 URL 最后一段。只认 `zh.md` / `en.md`，不再使用 `content/writings/<栏目>/<slug>.md` 这种平铺文件。
 
 ```
 content/writings/
-  career/year-review.md
-  notes/vue-boundaries.md
-  anime/eva-still-works.md
-
-public/writings/
-  notes/vue-boundaries/cover.svg
-  anime/eva-still-works/still.svg
+  notes/vue-boundaries/
+    zh.md
+    cover.svg
+  anime/eva-still-works/
+    zh.md
+    still.svg
+  career/college-metrics/
+    zh.md
+    en.md
+    cover.webp
 ```
 
-不要把 `.md` 放进 `public/`，也不要把配图放进 `content/`。未登记的栏目文件夹会被加载器忽略。
+不要把 `.md` 放进 `public/`。未登记的栏目文件夹会被加载器忽略。
+
+语言存在 `localStorage` 里，路由不带 `zh` / `en`。切换语言时标题、摘要、正文和目录一起换；没有英文稿时正文回退到中文。
 
 ## 栏目
 
@@ -36,16 +42,17 @@ public/writings/
 | `notes` | 技术笔记 | `writing.notes` |
 | `anime` | 动漫杂谈 | `writing.anime` |
 
-新增栏目时四步都要做：
+新增栏目时三步都要做：
 
 1. 建 `content/writings/<id>/`
-2. 按需建 `public/writings/<id>/`
-3. 把 `<id>` 加入 `WRITING_CATEGORY_IDS`
-4. 在 [`src/i18n/zh.ts`](../src/i18n/zh.ts) 与 [`src/i18n/en.ts`](../src/i18n/en.ts) 的 `writing` 下补翻译
+2. 把 `<id>` 加入 `WRITING_CATEGORY_IDS`
+3. 在 [`src/i18n/zh.ts`](../src/i18n/zh.ts) 与 [`src/i18n/en.ts`](../src/i18n/en.ts) 的 `writing` 下补翻译
 
-## 文章文件
+## 一篇一夹
 
-每个 `.md` 必须带 YAML frontmatter，`title` 不能缺，否则该文件不会出现在列表里。
+每个语言文件必须带 YAML frontmatter。至少一份语言文件要有 `title`，否则该文件夹不会出现在列表里。
+
+只有中文正文、标题已双语时，写 `zh.md` 即可：
 
 ```md
 ---
@@ -63,15 +70,24 @@ minutes: 8
 ![说明](./cover.webp)
 ```
 
+完整英文稿另存同目录的 `en.md`，用该语言的 `title` / `excerpt`，不必再写 `titleEn`。
+
+加载器按 `(栏目, slug)` 把两份文件合成一条文章：
+
+- `en.md` 缺省：`body.en` 回退到中文正文；英文标题/摘要用 `titleEn` / `excerptEn`，再缺省则沿用中文。
+- `en.md` 存在：英文标题、摘要、正文以 `en.md` 为准。
+- `date`、`cover` 以 `zh.md` 为准；只有英文时用 `en.md`。
+- 阅读分钟数按各语言正文分别估算，也可用该文件的 `minutes` 覆盖。
+
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| `title` | 是 | 中文标题 |
-| `titleEn` | 否 | 英文标题；缺省时沿用 `title` |
-| `excerpt` | 否 | 列表摘要 |
-| `excerptEn` | 否 | 英文摘要；缺省时沿用 `excerpt` |
+| `title` | 至少一份语言文件需要 | 该语言标题；`zh.md` 里可用 `titleEn` 补英文标题 |
+| `titleEn` | 否 | 仅 `zh.md`：没有 `en.md` 时的英文标题 |
+| `excerpt` | 否 | 该语言列表摘要 |
+| `excerptEn` | 否 | 仅 `zh.md`：没有 `en.md` 时的英文摘要 |
 | `date` | 否 | `YYYY-MM-DD`，用于排序；缺省为 `1970-01-01` |
-| `cover` | 否 | 封面文件名或绝对 URL |
-| `minutes` | 否 | 阅读分钟数；缺省按正文去空白字数 / 400 估算 |
+| `cover` | 否 | 同目录封面文件名，或绝对 URL |
+| `minutes` | 否 | 该语言阅读分钟数；缺省按正文去空白字数 / 400 估算 |
 
 frontmatter 只支持「一行一个 `key: value`」，不要写嵌套 YAML 或多行块。
 
@@ -79,20 +95,19 @@ frontmatter 只支持「一行一个 `key: value`」，不要写嵌套 YAML 或�
 
 ## 配图
 
-- 文件放在 `public/writings/<栏目>/<slug>/` 下，可任意文件名（`.webp` / `.png` / `.jpg` / `.svg` 等）。
-- 正文里优先写相对路径：`![说明](./cover.webp)` 或 `![说明](cover.webp)`，加载时会改写成 `/writings/<栏目>/<slug>/cover.webp`。
+- 文件与 `zh.md` / `en.md` 放在同一篇文章文件夹里，可任意文件名（`.webp` / `.png` / `.jpg` / `.svg` 等）。
+- 正文写相对路径：`![说明](./cover.webp)` 或 `![说明](cover.webp)`，加载时改成 Vite 打包后的资源地址。
 - 已经是 `/...` 或 `http(s)://...` 的地址不会改写。
-- 从 Markdown 指到 `public/` 的相对路径（例如 `../../../public/writings/career/foo.png`）会收成站点根路径 `/writings/career/foo.png`。Vite 会把 `public/` 映射到网站根，中间那些 `../` 不能原样拼进 URL。
 - `cover` 同样：写文件名即可，规则与相对路径图片相同。
 
-一篇文章多张图时，都放在该篇的 `public/writings/<栏目>/<slug>/` 目录里，不要共用别的 slug 文件夹。
+一篇文章多张图时，都放在该篇文件夹里，不要共用别的 slug 文件夹。
 
 ## 搜索与筛选
 
 独立索引页 `/writing`（及 `/writing/<栏目>`）会：
 
 - 按栏目筛选（全部 + 已登记栏目，栏目走 path）
-- 用 Fuse.js 模糊搜索当前筛选结果的标题、摘要、栏目名和正文（关键词走 `?q=`）
+- 用 Fuse.js 模糊搜索当前筛选结果的标题、摘要、栏目名和**当前语言**正文（关键词走 `?q=`）
 
 搜索在前端完成，不另建索引服务。单篇很长时，仍是整篇 Markdown 打进前端包；文章数量明显变多再考虑构建期索引。
 
@@ -100,8 +115,9 @@ frontmatter 只支持「一行一个 `key: value`」，不要写嵌套 YAML 或�
 
 发一篇新文章前确认：
 
-- [ ] 文件在 `content/writings/<已登记栏目>/<slug>.md`
-- [ ] frontmatter 有 `title` 和 `date`
-- [ ] 配图在 `public/writings/<同一栏目>/<同一 slug>/`
+- [ ] 文件夹在 `content/writings/<已登记栏目>/<slug>/`
+- [ ] 至少有 `zh.md` 或 `en.md`，且带 `title`
+- [ ] 需要英文正文时另写 `en.md`
+- [ ] 配图与 Markdown 在同一文件夹
 - [ ] 正文图片用 `./文件名`，且文件确实存在
-- [ ] 本地打开 `/writing/<栏目>/<slug>` 能看到正文和图片
+- [ ] 本地打开 `/writing/<栏目>/<slug>`，切语言后标题/正文符合预期

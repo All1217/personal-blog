@@ -4,7 +4,7 @@ titleEn: Analysis of Popular College Metrics (v1.0)
 excerpt: 解析大学的评价体系
 excerptEn: Analysis of the University Evaluation System.
 date: 2026-09-13
-cover: 封面.jpeg
+cover: Analysis_of_Popular_College_Metrics_cover.png
 ---
 
 
@@ -18,7 +18,7 @@ cover: 封面.jpeg
 
 # 1 前言
 
-![本文封面](../../../public/writings/career/Analysis_of_Popular_College_Metrics_cover.png)
+![本文封面](./Analysis_of_Popular_College_Metrics_cover.png)
 
 首先，笔者推广一些前人针对本科四年的经验，比如知名的《上海交通大学生存手册》（[[Release 最新版本 · SurviveSJTU/SurviveSJTUManual](https://github.com/SurviveSJTU/SurviveSJTUManual/releases/tag/continuous)](https://github.com/SurviveSJTU/SurviveSJTUManual/tree/master)）。
 
