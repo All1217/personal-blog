@@ -1,7 +1,7 @@
 export const en = {
   site: {
-    name: 'Lin Mo',
-    title: 'Lin Mo · Engineer / Writer'
+    name: 'All1217',
+    title: 'All1217 · Engineer / Writer'
   },
   nav: {
     home: 'Home',
@@ -23,7 +23,7 @@ export const en = {
   },
   sections: {
     opensource: 'Open Source',
-    opensourceSub: 'Tools, experiments, and long-running projects, ordered by recent activity',
+    opensourceSub: 'Tools, experiments, and long-running projects',
     writing: 'Writing',
     writingSub: 'Latest pieces; the full list lives on its own page'
   },

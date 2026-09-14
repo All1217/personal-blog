@@ -11,35 +11,20 @@
       <div class="writing-toolbar">
         <label class="search">
           <span class="sr-only">{{ t('writing.search') }}</span>
-          <input
-            :value="query"
-            type="search"
-            :placeholder="t('writing.search')"
-            autocomplete="off"
-            @input="onQueryInput"
-          />
+          <input :value="query" type="search" :placeholder="t('writing.search')" autocomplete="off"
+            @input="onQueryInput" />
         </label>
         <div class="chips" role="tablist">
-          <button
-            v-for="item in categoryOptions"
-            :key="item.id"
-            type="button"
-            role="tab"
-            :aria-selected="activeCategory === item.id"
-            :class="{ active: activeCategory === item.id }"
-            @click="selectCategory(item.id)"
-          >
+          <button v-for="item in categoryOptions" :key="item.id" type="button" role="tab"
+            :aria-selected="activeCategory === item.id" :class="{ active: activeCategory === item.id }"
+            @click="selectCategory(item.id)">
             {{ item.label }}
           </button>
         </div>
       </div>
 
       <div v-if="results.length" class="card-grid">
-        <WritingCard
-          v-for="writing in results"
-          :key="`${writing.category}-${writing.slug}`"
-          :writing="writing"
-        />
+        <WritingCard v-for="writing in results" :key="`${writing.category}-${writing.slug}`" :writing="writing" />
       </div>
       <p v-else class="empty">{{ t('writing.empty') }}</p>
     </div>

@@ -1,14 +1,8 @@
 <template>
   <main>
     <ProfileIntro />
-    <component
-      :is="section.component"
-      v-for="section in sections"
-      :id="section.id"
-      :key="section.id"
-      :i18n-key="section.i18nKey"
-      :subtitle-key="section.subtitleKey"
-    />
+    <component :is="section.component" v-for="section in sections" :id="section.id" :key="section.id"
+      :i18n-key="section.i18nKey" :subtitle-key="section.subtitleKey" />
   </main>
 </template>
 

@@ -14,28 +14,22 @@
       </nav>
 
       <div class="toggles">
-        <button
-          type="button"
-          class="icon-btn"
+        <button type="button" class="icon-btn"
           :aria-label="locale === 'zh' ? t('actions.localeToEn') : t('actions.localeToZh')"
-          :title="locale === 'zh' ? t('actions.localeToEn') : t('actions.localeToZh')"
-          @click="toggleLocale"
-        >
+          :title="locale === 'zh' ? t('actions.localeToEn') : t('actions.localeToZh')" @click="toggleLocale">
           {{ locale === 'zh' ? 'EN' : '中' }}
         </button>
-        <button
-          type="button"
-          class="icon-btn"
+        <button type="button" class="icon-btn"
           :aria-label="theme === 'dark' ? t('actions.themeToLight') : t('actions.themeToDark')"
-          :title="theme === 'dark' ? t('actions.themeToLight') : t('actions.themeToDark')"
-          @click="toggleTheme"
-        >
+          :title="theme === 'dark' ? t('actions.themeToLight') : t('actions.themeToDark')" @click="toggleTheme">
           <svg v-if="theme === 'dark'" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2" />
-            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
           <svg v-else viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linejoin="round" />
           </svg>
         </button>
       </div>

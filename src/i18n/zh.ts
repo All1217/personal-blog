@@ -1,7 +1,7 @@
 export const zh = {
   site: {
-    name: '林默',
-    title: '林默 · 工程师 / 写作者'
+    name: 'All1217',
+    title: 'All1217 · 工程师 / 写作者'
   },
   nav: {
     home: '首页',
@@ -23,7 +23,7 @@ export const zh = {
   },
   sections: {
     opensource: '开源项目',
-    opensourceSub: '业余维护的工具、实验与长期项目，按最近活跃排列',
+    opensourceSub: '业余维护的工具、实验与长期项目',
     writing: '文字创作',
     writingSub: '最近写的几篇，完整列表在独立页面'
   },
