@@ -33,7 +33,9 @@ content/
     │       ├── zh.md
     │       └── Analysis_of_Popular_College_Metrics_cover.png
     └── notes/ # 专放技术笔记类文章
-        └── personal-blog（本个人博客网站）简介.md
+        └── Personal Blog Introduction/
+            ├── zh.md
+            └── en.md
 ```
 
 不接数据库，采用市场常见做法：将一篇文章和其配图放在同一个文件夹，目录树本身包含分类功能，项目构建后当成可引用的静态文件，Hugo、Astro、VitePress、Hexo 都是这条路。
@@ -41,6 +43,35 @@ content/
 为了实现多语言切换，中文和英文文章一式两份放在同一个文件夹里。中文命名为`zh.md`，英文命名为`en.md`，网页检测到当前是中文模式，就加载`zh.md`，检测到是英文模式，就加载`en.md`
 
 这种模式适合文章数量少（几百篇以内）、无评论点赞等复杂交互场景的文档网站。
+
+约定要落到代码里。构建时，Vite 用 `import.meta.glob` 把 `content/writings/` 下的 Markdown 和配图一次性收进前端包（见 `src/data/loadWritings.ts`）。Markdown 用原文字符串，图片用打包后的 URL：
+
+```ts
+const markdownFiles = import.meta.glob('../../content/writings/**/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+})
+
+const imageFiles = import.meta.glob(
+  '../../content/writings/**/*.{png,jpg,jpeg,webp,gif,svg}',
+  { query: '?url', import: 'default', eager: true }
+)
+```
+
+路径解析只认「栏目 / 文章文件夹 / 语言文件」这三层。文件夹名就是 URL 里的 slug，文件名只能是 `zh.md` 或 `en.md`，其它 `.md` 会被忽略：
+
+```ts
+function parsePath(path: string) {
+  const match = path
+    .replace(/\\/g, '/')
+    .match(/content\/writings\/([^/]+)\/([^/]+)\/(zh|en)\.md$/)
+  if (!match) return null
+  const [, category, slug, locale] = match
+  // category 还要落在 WRITING_CATEGORY_IDS 里
+  return { category, slug, locale }
+}
+```
 
 # 2 模糊匹配
 
@@ -52,7 +83,30 @@ Fuse.js 要解决的就是这个问题，它的思路是：要改几下，关键
 
 力扣第 72 题（ [编辑距离](https://leetcode.cn/problems/edit-distance/description/)）的题目是：给两个单词，只允许三种操作——插入一个字符、删除一个字符、替换一个字符——求把 `word1` 变成 `word2` 的最少操作次数。这个次数就叫编辑距离（Levenshtein distance）。两端文本之间的编辑距离越小，可以认为它们越相似。
 
-力扣是算法练习网站，学的是抽象理论知识，它要的是两个完整字符串之间的一个整数（编辑距离），标准解法是填一张二维表：`dp[i][j]` 表示 `word1` 的前 `i` 个字符变成 `word2` 的前 `j` 个字符要几步。实际应用场景更复杂，要的可不仅仅是那一个数字。
+力扣是算法练习网站，学的是抽象理论知识，它要的是两个完整字符串之间的一个整数（编辑距离），标准解法是填一张二维表：`dp[i][j]` 表示 `word1` 的前 `i` 个字符变成 `word2` 的前 `j` 个字符要几步。骨架长这样（伪代码，不是完整题解）：
+
+```text
+# dp[i][j] = word1[0..i) 变成 word2[0..j) 的最少步数
+for i in 0..len(word1):
+  dp[i][0] = i          # 全删
+for j in 0..len(word2):
+  dp[0][j] = j          # 全插
+
+for i in 1..len(word1):
+  for j in 1..len(word2):
+    if word1[i-1] == word2[j-1]:
+      dp[i][j] = dp[i-1][j-1]           # 不用改
+    else:
+      dp[i][j] = 1 + min(
+        dp[i-1][j],     # 删除
+        dp[i][j-1],     # 插入
+        dp[i-1][j-1]    # 替换
+      )
+
+return dp[len(word1)][len(word2)]
+```
+
+实际应用场景更复杂，要的可不仅仅是那一个数字。
 
 相对于原版，Fuse首先需要考虑**「短关键词出现在长文的哪一段」，不是直接把两篇文章放在一起对比。** 如果把关键词和整篇正文做对比，假设关键词只有几个字，正文有几千个字，距离几乎等于正文长度减关键词长度，编辑距离永远都会「很远」，这样对比没有意义。实际上，Fuse 从正文开头逐字往后看，手里只记着关键词已经对上了多少、错了几次。走到某个字，关键词走完了，就说明刚经过的那一小段够像，记下这个分数。一篇文章取分数最好的那一次和其他文章比。
 
@@ -65,7 +119,7 @@ Fuse.js 要解决的就是这个问题，它的思路是：要改几下，关键
 | 栏目名 | 1    | 搜「技术笔记」时能靠栏目命中         |
 | 正文   | 0.5  | 参与全文检索，但不要压过标题         |
 
-四段各自算出一个分数，再按权重合成一个总分，分数低的排前面。
+四段各自算出一个分数，再按权重合成一个总分，分数低的排前面。这些权重不是口头约定，而是直接写进本站的 Fuse 配置，见下方 `useWritingSearch` 代码。
 
 输入框是空的时候不跑 Fuse，直接按日期列出当前栏目。切换中英文后，标题、摘要和正文换成当前语言，这份名单会重建，所以搜的是你正在看的那种语言，不是中英混在一起搜。
 
@@ -75,12 +129,85 @@ Fuse.js 要解决的就是这个问题，它的思路是：要改几下，关键
 >
 > 所谓不同的对齐方式，就是同一对关键词和正文，字符可以有不同的对应关系。比如关键词是「组件」，正文里出现「组建件」：
 >
-> - 一种对法：「件」对「建」，算一次替换，后面的「件」再对「件」。
-> - 另一种对法：把中间的「建」当成多出来的字跳过，算一次插入，「组」对「组」，「件」对「件」。
+> - 一种对法：「件」对「建」，算一次替换，后面的「件」再对「件」。编辑次数 = 1。
+> - 另一种对法：把中间的「建」当成多出来的字跳过，算一次插入，「组」对「组」，「件」对「件」。编辑次数 = 1。
 >
-> 两种对法都只花了一次编辑。Bitap 用那排开关把这些还没走完的对法一起记着。其中一种提前把允许的编辑次数用完了，只丢掉这一种对法；另一种如果还能走完关键词，这篇文章仍然算命中。
+> 两种对法都只花了一次编辑。Bitap 用那排开关把这些还没走完的对法一起记着（同一次循环里的多份进度，不是多条线程）。其中一种提前把允许的编辑次数用完了，只丢掉这一种对法；另一种如果还能走完关键词，这篇文章仍然算命中。
 
-**此外，Fuse把编辑距离归一化成 0 到 1 之间的分数，再加门槛。** 0 是完全一样。`threshold: 0.36` 表示高于 0.36 的结果丢掉（编辑距离太长，关键词和文本不相似）。设成 0 就退化成精确匹配。力扣没有这个截断，它总是返回最小答案。
+把上面的扫描收成伪代码，结构大致是这样（不是 Fuse.js 源文件）：
+
+```text
+# pattern = 关键词，text = 正文，maxErrors = 允许的最多编辑次数
+# matched[e] = 在恰好用掉 e 次编辑时，关键词已经对上了几个字
+
+bestScore = +inf
+
+for each char in text:                    # 正文只扫一遍
+  for e from maxErrors down to 0:
+    if char 对得上 pattern 的下一个字:
+      matched[e] 往前拨一格               # 精确推进
+    else:
+      # 替换 / 插入 / 删除 都会消耗 1 次编辑，
+      # 进度从 matched[e-1] 继承过来
+      matched[e] = 由 matched[e-1] 转移而来
+
+    if matched[e] == len(pattern):        # 关键词走完了
+      score = e / len(pattern)            # 见下一节归一化
+      bestScore = min(bestScore, score)
+
+# 一篇文章只留 bestScore，再和其他文章比
+```
+
+**此外，Fuse把编辑距离归一化成 0 到 1 之间的分数，再加门槛。** 本站打开了 `ignoreLocation: true` 时，可以近似看成：
+
+```text
+score ≈ 编辑次数 / 关键词长度
+```
+
+0 是完全一样。`threshold: 0.36` 表示高于 0.36 的结果丢掉（编辑距离太长，关键词和文本不相似）。例如关键词「组件边界」长度为 4，改 1 个字得分 `0.25`，留下；改 2 个字得分 `0.5`，丢掉。设成 0 就退化成精确匹配。力扣没有这个截断，它总是返回最小答案。
+
+本站真正接线的代码在 `src/composables/useWritingSearch.ts`。栏目过滤、当前语言摊平、权重和门槛都在这里：
+
+```ts
+const scoped = computed(() => {
+  const current = unref(category)
+  if (current === 'all') return writings
+  return writings.filter((item) => item.category === current)
+})
+
+const searchable = computed(() =>
+  scoped.value.map((writing) => ({
+    writing,
+    title: tx(writing.title),
+    excerpt: tx(writing.excerpt),
+    categoryLabel: t(`writing.${writing.category}`),
+    body: tx(writing.body)
+  }))
+)
+
+const fuse = computed(
+  () =>
+    new Fuse(searchable.value, {
+      ignoreLocation: true,
+      threshold: 0.36,
+      keys: [
+        { name: 'title', weight: 2 },
+        { name: 'excerpt', weight: 1.2 },
+        { name: 'categoryLabel', weight: 1 },
+        { name: 'body', weight: 0.5 }
+      ]
+    })
+)
+
+const results = computed(() => {
+  const keyword = unref(query).trim()
+  void locale.value
+  if (!keyword) return scoped.value
+  return fuse.value.search(keyword).map((hit) => hit.item.writing)
+})
+```
+
+读这段时对照上面的表格：`keys` 就是四段文字的权重；`threshold: 0.36` 就是归一化分数的门槛；`tx(...)` 保证搜的是当前语言的标题、摘要和正文；关键词为空时直接返回 `scoped`，根本不调用 `fuse.search`。
 
 ## 2.1 为什么用编辑距离，而不是 KMP
 
@@ -102,4 +229,3 @@ KMP 解决的是另一道题：这段文字里有没有**原样**连续出现这
 | Elasticsearch | 要单独的服务和索引同步。本站没有后端，文章改完是重新构建，不是往搜索引擎推一条数据 |
 
 Fuse.js 把 Bitap、0 到 1 的分数、`threshold`、多字段 `keys` 和权重、`ignoreLocation`都考虑进去了。调用方只需要把当前栏目的文章摊成标题、摘要、栏目名、正文。代价是每次查询都线性扫过这些文章的正文，不能当成百万级文档的搜索引擎。文章数量明显上去之后，再换倒排索引或其他更优解决方案。
-
