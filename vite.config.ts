@@ -6,5 +6,6 @@ export default defineConfig({
   server: {
     port: 5100,
     open: true
-  }
+  },
+  base: '/personal-blog/'
 })
