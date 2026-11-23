@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    (function() {
+      // 你的项目部署在子路径下，基础路径为 /personal-blog
+      var basePath = '/personal-blog'; 
+      var pathname = window.location.pathname;
+
+      // 提取基础路径之后的部分作为路由路径
+      // 例如 /personal-blog/writing -> /writing
+      var routePath = pathname.slice(basePath.length) || '/';
+
+      // 拼接上查询参数和哈希，确保信息不丢失
+      var fullPath = routePath + window.location.search + window.location.hash;
+
+      // 安全校验：防止开放重定向（仅允许相对路径）
+      if (routePath.startsWith('/') && !routePath.startsWith('//') && !routePath.includes('://')) {
+        // 重定向到入口文件，并将原始路由路径编码在 p 参数中
+        window.location.replace(basePath + '/?p=' + encodeURIComponent(fullPath));
+      } else {
+        // 路径异常时，回退到首页
+        window.location.replace(basePath + '/');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p>正在重定向...</p>
+</body>
+</html>
